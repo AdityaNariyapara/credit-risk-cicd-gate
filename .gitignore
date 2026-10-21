@@ -1,0 +1,29 @@
+# Datasets are tracked by DVC, never in plain git history
+/data/*.csv
+
+# MLflow local store
+/mlruns/
+/mlflow.db
+
+# DVC internals (cache stays local; dvcstore/ remote IS committed)
+/.dvc/cache
+/.dvc/tmp
+/.dvc/config.local
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+# Generated gate / run outputs (produced by CI, never committed)
+/gate_summary.md
+/gate_result.json
+/run_config.json
+/docs/_runs.csv
+
+# Outputs
+/reports/figures/*.png
+.DS_Store
