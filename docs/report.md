@@ -75,13 +75,16 @@ rather than trusting single-number comparisons.
 
 ## 3. CI history — three pull requests
 
-| PR | Change | CI result | Why |
-|----|--------|-----------|-----|
-| #1 | Add reports/docs (Shreya) | ✅ pass | tests pass; gate model unchanged = baseline |
-| #2 | Weaken model in `ci.yaml` (shallow trees, no class weighting) | ❌ fail | PR-AUC drops below baseline − 0.01 |
-| #3 | Break feature logic | ❌ fail | a unit test fails before the gate runs |
+| PR scenario | Change | CI result | Why |
+|-------------|--------|-----------|-----|
+| Passes | Add reports/docs (Shreya) | ✅ pass | tests pass; gate model unchanged = baseline |
+| Fails — model worse | Weaken model in `ci.yaml` (shallow trees, no class weighting) | ❌ fail at gate step | PR-AUC drops below baseline − 0.01 |
+| Fails — test fails | Break the zero-credit-limit guard | ❌ fail at test step | a unit test fails before the gate runs |
 
-See the repo's Pull Requests tab for the live checks.
+See the repo's Pull Requests tab for the live checks. The repo is private, so
+merge-blocking is not hard-enforced (branch protection needs GitHub Pro on a
+private repo); the gate still runs on every PR and reports ✓/✗, and the
+baseline is additionally guarded by `.github/CODEOWNERS`.
 
 ## 4. Reproducibility & integrity
 
