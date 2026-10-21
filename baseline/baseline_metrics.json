@@ -1,0 +1,16 @@
+{
+  "metric_for_gate": "average_precision",
+  "metrics": {
+    "average_precision": 0.794775784381657,
+    "roc_auc": 0.9189408706952567,
+    "f1": 0.6534653465346535,
+    "precision": 0.5238095238095238,
+    "recall": 0.868421052631579,
+    "accuracy": 0.825
+  },
+  "data_version": "v1",
+  "config": "configs/ci.yaml",
+  "run_name": "logreg_seed42_C1.0_class_weightbalanced",
+  "git_commit": "f303fefb53b63c68687e7fdeace30e101e4f7bc8",
+  "updated_at": "2026-10-21T16:29:20.534428+00:00"
+}

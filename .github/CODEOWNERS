@@ -1,0 +1,5 @@
+# The baseline and the gate config are protected: changes require review so the
+# quality gate cannot be silently weakened (see docs/baseline_rule.md).
+/baseline/            @AdityaNariyapara
+/configs/ci.yaml      @AdityaNariyapara
+/.github/workflows/   @AdityaNariyapara
