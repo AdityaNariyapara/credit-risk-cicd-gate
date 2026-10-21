@@ -1,0 +1,45 @@
+# Full config — wider search across seeds and hyperparameters for the
+# experiment-tracking deliverable (generates the 10+ tracked runs).
+environment: full
+
+data:
+  version: v1
+  path: data/credit_card_customers_v1.csv
+  target: High_Risk_Customer
+  id_column: Customer_ID
+  test_size: 0.25
+
+features:
+  utilisation_high_cutoff: 0.5
+  payment_delay_flag_days: 5
+  age_bins: [0, 25, 40, 60, 200]
+  age_labels: [young, early_career, established, senior]
+
+training:
+  random_seed: 42
+  seeds: [42, 7, 123]
+  cv_folds: 5
+  scoring: average_precision
+  models:
+    - name: logreg
+      family: logistic_regression
+      params:
+        C: [0.1, 1.0, 10.0]
+        class_weight: [balanced]
+    - name: rf
+      family: random_forest
+      params:
+        n_estimators: [100, 300]
+        max_depth: [6, 12]
+        class_weight: [balanced]
+
+mlflow:
+  tracking_uri: sqlite:///mlflow.db
+  experiment_name: credit_risk
+  registered_model_name: credit_risk_gate_model
+
+gate:
+  metric: average_precision
+  min_delta: 0.0
+  tolerance: 0.01
+  baseline_path: baseline/baseline_metrics.json

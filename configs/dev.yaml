@@ -1,0 +1,44 @@
+# Development config — small/fast search for quick local iteration.
+environment: dev
+
+data:
+  version: v1
+  path: data/credit_card_customers_v1.csv
+  target: High_Risk_Customer
+  id_column: Customer_ID
+  test_size: 0.25
+
+features:
+  utilisation_high_cutoff: 0.5      # Current_Balance / Credit_Limit risk cut-off
+  payment_delay_flag_days: 5        # late-payment binary flag threshold
+  age_bins: [0, 25, 40, 60, 200]
+  age_labels: [young, early_career, established, senior]
+
+training:
+  random_seed: 42
+  seeds: [42]
+  cv_folds: 3
+  scoring: average_precision
+  models:
+    - name: logreg
+      family: logistic_regression
+      params:
+        C: [1.0]
+        class_weight: [balanced]
+    - name: rf
+      family: random_forest
+      params:
+        n_estimators: [100]
+        max_depth: [6]
+        class_weight: [balanced]
+
+mlflow:
+  tracking_uri: sqlite:///mlflow.db
+  experiment_name: credit_risk
+  registered_model_name: credit_risk_gate_model
+
+gate:
+  metric: average_precision
+  min_delta: 0.0
+  tolerance: 0.01
+  baseline_path: baseline/baseline_metrics.json

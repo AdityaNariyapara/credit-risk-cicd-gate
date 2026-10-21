@@ -1,0 +1,45 @@
+# CI config — used by the GitHub Actions quality gate. Deterministic single
+# seed, modest search so the workflow finishes quickly, strict gate tolerance.
+environment: ci
+
+data:
+  version: v1
+  path: data/credit_card_customers_v1.csv
+  target: High_Risk_Customer
+  id_column: Customer_ID
+  test_size: 0.25
+
+features:
+  utilisation_high_cutoff: 0.5
+  payment_delay_flag_days: 5
+  age_bins: [0, 25, 40, 60, 200]
+  age_labels: [young, early_career, established, senior]
+
+training:
+  random_seed: 42
+  seeds: [42]
+  cv_folds: 3
+  scoring: average_precision
+  models:
+    - name: logreg
+      family: logistic_regression
+      params:
+        C: [0.5, 1.0]
+        class_weight: [balanced]
+    - name: rf
+      family: random_forest
+      params:
+        n_estimators: [150]
+        max_depth: [6, 10]
+        class_weight: [balanced]
+
+mlflow:
+  tracking_uri: sqlite:///mlflow.db
+  experiment_name: credit_risk_ci
+  registered_model_name: credit_risk_gate_model
+
+gate:
+  metric: average_precision
+  min_delta: 0.0
+  tolerance: 0.01       # new model must be >= baseline - 0.01 PR-AUC
+  baseline_path: baseline/baseline_metrics.json
