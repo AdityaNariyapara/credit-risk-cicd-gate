@@ -88,10 +88,9 @@ class FeatureEngineer:
             df["Income_Bracket"].map(INCOME_ORDER).fillna(1).astype(int)
         )
 
-        # 2. Engineered: ratio. Guard the zero-credit-limit edge case.
-        safe_cl = np.where(cl > 0, cl, np.nan)
-        util = np.divide(bal, safe_cl, out=np.zeros_like(bal), where=~np.isnan(safe_cl))
-        util = np.nan_to_num(util, nan=0.0, posinf=0.0, neginf=0.0)
+        # 2. Engineered: ratio. Simplified direct division (NOTE: this drops the
+        #    zero-credit-limit guard, so Credit_Limit == 0 now yields inf).
+        util = bal / cl
         out["credit_utilisation"] = util
 
         # 3. Engineered: binary flag from the configured utilisation cut-off.
