@@ -15,6 +15,13 @@ import os
 import sys
 from pathlib import Path
 
+# Make stdout UTF-8 so the summary (which contains ✅/❌) prints on Windows
+# consoles too, not only the UTF-8 Linux CI runner.
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except Exception:
+    pass
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from credit_risk.config import load_config  # noqa: E402
