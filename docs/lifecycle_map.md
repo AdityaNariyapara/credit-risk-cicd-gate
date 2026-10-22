@@ -1,4 +1,4 @@
-# Task 1 — Lifecycle Map (Topic 1)
+# Task 1 - Lifecycle Map (Topic 1)
 
 **Team:** Aditya Nariyapara (B009), Shreya Dutt (B016)
 
@@ -22,36 +22,36 @@ repository.
 ## Where ML delivery differs from ordinary software delivery
 
 1. **Correctness is statistical, not binary.** A traditional unit test passes or
-   fails deterministically. A model is "good enough" only relative to a
-   baseline and within run-to-run noise, so our **test** stage needs a
-   *quality gate* (`run_gate.py`) comparing a metric to a stored baseline, plus
-   a noise analysis across seeds (Task 7), not just assertions.
+ fails deterministically. A model is "good enough" only relative to a
+ baseline and within run-to-run noise, so our **test** stage needs a
+ *quality gate* (`run_gate.py`) comparing a metric to a stored baseline, plus
+ a noise analysis across seeds (Task 7), not just assertions.
 
 2. **Data is a versioned input, not just configuration.** In software the code
-   fully determines behaviour. Here the same code on `v1` vs `v2` data produces
-   different models, so data must be versioned alongside code (**DVC**) and the
-   data version recorded with every run. Reproducing a result means restoring
-   *code + config + data* together.
+ fully determines behaviour. Here the same code on `v1` vs `v2` data produces
+ different models, so data must be versioned alongside code (**DVC**) and the
+ data version recorded with every run. Reproducing a result means restoring
+ *code + config + data* together.
 
 3. **Experiments are first-class artefacts.** Software builds are
-   interchangeable; ML runs each carry parameters, metrics and a model artefact
-   worth keeping and comparing. We log every run to **MLflow** and select the
-   model from that history rather than from a single build.
+ interchangeable; ML runs each carry parameters, metrics and a model artefact
+ worth keeping and comparing. We log every run to **MLflow** and select the
+ model from that history rather than from a single build.
 
 4. **Metric and fairness choices are design decisions that must be defended.**
-   Accuracy is misleading under a 1-in-5 class imbalance; the gate metric
-   (PR-AUC) and its threshold are justified and compared against alternatives
-   (Task 8), and error is checked across Income_Bracket subgroups — concerns
-   that have no analogue in ordinary CI.
+ Accuracy is misleading under a 1-in-5 class imbalance; the gate metric
+ (PR-AUC) and its threshold are justified and compared against alternatives
+ (Task 8), and error is checked across Income_Bracket subgroups - concerns
+ that have no analogue in ordinary CI.
 
 ## Stages intentionally left out, with reasons
 
 - **Serving / real-time deployment infrastructure.** The brief's "deploy" is the
-  acceptance of a model past the gate and its registration, not a live
-  prediction endpoint. We stop at the registry: a hosted API adds no marks
-  against the rubric and needs paid infrastructure the brief forbids.
+ acceptance of a model past the gate and its registration, not a live
+ prediction endpoint. We stop at the registry: a hosted API adds no marks
+ against the rubric and needs paid infrastructure the brief forbids.
 - **Production monitoring / drift alerting dashboards.** Simulated here only as
-  the v1→v2 data-change drill. Continuous drift monitoring belongs to a later
-  project (churn/drift) and would require a running service.
+ the v1→v2 data-change drill. Continuous drift monitoring belongs to a later
+ project (churn/drift) and would require a running service.
 - **Infrastructure-as-code / environment provisioning.** Replaced by a single
-  `requirements.txt` + GitHub-hosted runners; no cloud account is used.
+ `requirements.txt` + GitHub-hosted runners; no cloud account is used.
