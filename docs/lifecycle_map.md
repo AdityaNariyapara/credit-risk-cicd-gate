@@ -13,7 +13,7 @@ repository.
 | **Plan** | Problem framing, metric choice, gate design | `docs/metric_justification.md`, `docs/report.md`, this map |
 | **Code** | Pipeline, feature and model code | `src/credit_risk/` (`config.py`, `features.py`, `model.py`, `pipeline.py`, `gate.py`) |
 | **Build** | Reproducible environment + data materialisation | `requirements.txt`, `dvc pull` of DVC-tracked data |
-| **Test** | Unit tests + data/feature validation | `tests/` (feature edge cases, config validation, gate logic) |
+| **Test** | Unit tests, the data gate and the model gate | `tests/` (28 tests), `scripts/validate_data.py` (data gate), `scripts/run_gate.py` (model gate) |
 | **Release** | Model selection, registry, baseline promotion | MLflow registry (`credit_risk_gate_model`), `scripts/update_baseline.py`, `baseline/baseline_metrics.json` |
 | **Deploy** | Gating the candidate before it replaces the baseline | `.github/workflows/ci.yml` + `scripts/run_gate.py` (the merge is the "deploy to baseline") |
 | **Operate** | Retraining on new data through the same pipeline | Task 7 data-change drill: `scripts/data_change_drill.py` with v2 |

@@ -31,6 +31,9 @@ jobs:
       - name: Run unit tests
         run: pytest tests/ -q
 
+      - name: Data gate (validate dataset before training)
+        run: python scripts/validate_data.py --config configs/ci.yaml
+
       - name: Train + evaluate quality gate (CI config)
         run: python scripts/run_gate.py --config configs/ci.yaml --summary gate_summary.md
 

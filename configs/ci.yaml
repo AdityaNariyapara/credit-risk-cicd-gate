@@ -38,8 +38,19 @@ mlflow:
   experiment_name: credit_risk_ci
   registered_model_name: credit_risk_gate_model
 
+data_validation:            # the data gate, runs before training
+  enabled: true
+  max_missing_share: 0.10   # reject a column with >10% missing
+  min_rows: 100
+  ranges:
+    Age: [18, 100]
+    Credit_Limit: [0, 100000]
+    Current_Balance: [0, 100000]
+    Payment_Delay_Days: [0, 365]
+
 gate:
   metric: average_precision
   min_delta: 0.0
   tolerance: 0.01       # new model must be >= baseline - 0.01 PR-AUC
   baseline_path: baseline/baseline_metrics.json
+  max_fairness_gap: null  # report subgroup FN gap; set a number to enforce it
