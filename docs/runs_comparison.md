@@ -1,4 +1,4 @@
-# Task 5 — Tracked Runs Comparison (21 runs)
+# Task 5 - Tracked Runs Comparison (21 runs)
 
 All runs logged to MLflow (`sqlite:///mlflow.db`, experiment `credit_risk`),
 data version **v1**, each with params, metrics, config artefact and model.
@@ -31,15 +31,15 @@ top row, registered as `credit_risk_gate_model`.
 
 ## Reading of the table
 
-- **PR-AUC spans 0.690 – 0.869**, driven heavily by the **random seed** (the
-  train/test split), not only by the model family — the single biggest source of
-  variation. This is exactly why the gate uses a tolerance band and why Task 7
-  checks improvements across multiple seeds rather than trusting one number.
-- **Accuracy is a poor discriminator**: it sits at 0.80–0.92 across *every* run,
-  including the weakest (a trivial "all negative" model would already score
-  ~0.81), confirming the metric-justification argument.
+- **PR-AUC spans 0.690 - 0.869**, driven heavily by the **random seed** (the
+ train/test split), not only by the model family - the single biggest source of
+ variation. This is exactly why the gate uses a tolerance band and why Task 7
+ checks improvements across multiple seeds rather than trusting one number.
+- **Accuracy is a poor discriminator**: it sits at 0.80-0.92 across *every* run,
+ including the weakest (a trivial "all negative" model would already score
+ ~0.81), confirming the metric-justification argument.
 - Logistic regression trades higher **recall** (catches more defaulters) for
-  lower precision; random forest is the reverse. PR-AUC captures this ranking
-  quality without fixing a threshold.
+ lower precision; random forest is the reverse. PR-AUC captures this ranking
+ quality without fixing a threshold.
 - Every row traces to a git commit and data version via MLflow tags
-  (`git_commit`, `data_version`), satisfying the traceability criterion.
+ (`git_commit`, `data_version`), satisfying the traceability criterion.
