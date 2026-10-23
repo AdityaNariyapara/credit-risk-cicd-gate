@@ -71,12 +71,33 @@ class MLflowConfig(BaseModel):
     registered_model_name: str = "credit_risk_gate_model"
 
 
+class DataValidationConfig(BaseModel):
+    """The data gate. A batch that fails these checks is rejected before any
+    training happens, so a bad dataset cannot silently produce a bad model."""
+    enabled: bool = True
+    max_missing_share: float = Field(0.10, ge=0.0, le=1.0,
+                                     description="Max fraction of missing values allowed per column")
+    min_rows: int = Field(100, ge=1)
+    # Inclusive [min, max] sanity ranges for numeric columns.
+    ranges: Dict[str, List[float]] = Field(default_factory=lambda: {
+        "Age": [18, 100],
+        "Credit_Limit": [0, 100000],
+        "Current_Balance": [0, 100000],
+        "Payment_Delay_Days": [0, 365],
+    })
+
+
 class GateConfig(BaseModel):
     metric: str = "average_precision"
     # The model must be at least baseline - tolerance to pass the gate.
     min_delta: float = Field(0.0, description="Allowed drop vs baseline (<=0 strict)")
     tolerance: float = Field(0.0, ge=0.0, description="Noise band around baseline")
     baseline_path: str = "baseline/baseline_metrics.json"
+    # Optional fairness guard: if set, the gate fails when the max gap in
+    # false-negative rate across Income_Bracket groups exceeds this value.
+    # Left null by default, so fairness is reported but not yet enforced.
+    max_fairness_gap: float | None = Field(
+        None, description="Max allowed subgroup false-negative-rate gap (null = report only)")
 
 
 class Config(BaseModel):
@@ -86,6 +107,7 @@ class Config(BaseModel):
     training: TrainingConfig
     mlflow: MLflowConfig
     gate: GateConfig
+    data_validation: DataValidationConfig = Field(default_factory=DataValidationConfig)
 
     # Reject unknown keys so typos in YAML are caught, not silently ignored.
     model_config = {"extra": "forbid"}
