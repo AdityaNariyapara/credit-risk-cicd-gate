@@ -43,3 +43,21 @@ top row, registered as `credit_risk_gate_model`.
  quality without fixing a threshold.
 - Every row traces to a git commit and data version via MLflow tags
  (`git_commit`, `data_version`), satisfying the traceability criterion.
+
+## Seed-robust model selection
+
+Selecting the single best run rewards a lucky seed. Averaging PR-AUC within each
+model family across all seeds gives a more defensible picture:
+
+| Family | Mean PR-AUC | Std | Min | Max | Runs |
+| --- | --- | --- | --- | --- | --- |
+| Logistic Regression | 0.8252 | 0.0318 | 0.7741 | 0.8633 | 9 |
+| Random Forest | 0.7799 | 0.0645 | 0.6898 | 0.8688 | 12 |
+
+On a seed-robust basis **Logistic Regression is the stronger and far more stable
+family** (higher mean, roughly half the variance). The single highest run is a
+Random Forest (0.8688), but that is a high-variance outlier: random forests here
+swing from 0.690 to 0.869 depending only on the split. This is why the stored
+gate **baseline is a Logistic Regression** (logreg_seed42_C1.0, 0.7948), and it
+is the selection we would defend to the risk team: pick the family that is
+reliably good, not the one that was lucky once.

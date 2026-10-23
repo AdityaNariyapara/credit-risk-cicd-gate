@@ -57,9 +57,36 @@ this disparity falls on the group least able to absorb it.
 
 **Is it acceptable?** Not as-is for deployment. It is acceptable to **register**
 this model (it is the best available and the gate is about not regressing), but
-we flag the subgroup FN gap as a **known limitation** and recommend a follow-up
-(subgroup-aware threshold or reweighting) before the model drives real
-decisions. We do **not** hide it behind the high aggregate accuracy.
+the subgroup FN gap must be fixed before the model drives real decisions. We do
+**not** hide it behind the high aggregate accuracy. Section 3b shows the fix.
+
+## 3b. Mitigation we implemented (equal-opportunity thresholds)
+
+Rather than only flag the gap, we implemented a subgroup-aware decision
+threshold (an equal-opportunity policy): we lower the threshold for the group
+that is being under-served until its false-negative rate matches the others.
+`scripts/robustness_and_fairness.py` computes this on the registered model's test
+split.
+
+| Income group | Threshold | FN rate before | FN rate after | Precision before | Precision after |
+| --- | --- | --- | --- | --- | --- |
+| High | 0.50 | 0.200 | 0.200 | 0.667 | 0.667 |
+| Medium | 0.50 | 0.188 | 0.188 | 0.619 | 0.619 |
+| **Low** | **0.31** | **0.353** | **0.176** | 0.733 | 0.583 |
+
+Lowering only the Low-income group's threshold to 0.31 **cuts its false-negative
+rate from 0.353 to 0.176**, bringing it in line with (slightly below) the High
+and Medium groups. High and Medium are already below the 0.20 target, so their
+thresholds are unchanged.
+
+**The trade-off, stated honestly.** Catching more high-risk Low-income customers
+costs precision: Low-income false positives rise from 4 to 10 and precision falls
+from 0.73 to 0.58. In credit terms, more Low-income customers are flagged as
+risky who would not have defaulted. We judge this acceptable because the
+false negative (a missed defaulter) is the more expensive error for the bank and
+the more harmful outcome for the customer, who is extended credit they cannot
+service. The policy is a per-group operating threshold applied at decision time;
+it does not change the trained model or the gate metric.
 
 ## 4. What new evidence would change our recommendation
 

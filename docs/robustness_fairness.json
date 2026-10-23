@@ -1,0 +1,74 @@
+{
+  "drill": {
+    "seeds": [
+      42,
+      7,
+      123,
+      2024,
+      99
+    ],
+    "v1": [
+      0.709,
+      0.7916,
+      0.8627,
+      0.8854,
+      0.8214
+    ],
+    "v2": [
+      0.8154,
+      0.8203,
+      0.8925,
+      0.8861,
+      0.8639
+    ],
+    "mean_v1": 0.814,
+    "mean_v2": 0.8556,
+    "mean_diff": 0.0416,
+    "paired_t": 2.37,
+    "p_value": 0.0769,
+    "ci95": [
+      0.0149,
+      0.0781
+    ]
+  },
+  "fairness": {
+    "target_fnr": 0.2,
+    "group_thresholds": {
+      "High": 0.5,
+      "Low": 0.31,
+      "Medium": 0.5
+    },
+    "rows": [
+      {
+        "group": "High",
+        "threshold": 0.5,
+        "fnr_before": 0.2,
+        "fnr_after": 0.2,
+        "fp_before": 2,
+        "fp_after": 2,
+        "precision_before": 0.667,
+        "precision_after": 0.667
+      },
+      {
+        "group": "Low",
+        "threshold": 0.31,
+        "fnr_before": 0.353,
+        "fnr_after": 0.176,
+        "fp_before": 4,
+        "fp_after": 10,
+        "precision_before": 0.733,
+        "precision_after": 0.583
+      },
+      {
+        "group": "Medium",
+        "threshold": 0.5,
+        "fnr_before": 0.188,
+        "fnr_after": 0.188,
+        "fp_before": 8,
+        "fp_after": 8,
+        "precision_before": 0.619,
+        "precision_after": 0.619
+      }
+    ]
+  }
+}

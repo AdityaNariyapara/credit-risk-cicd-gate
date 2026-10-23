@@ -37,3 +37,27 @@ warns against.
 This is the whole point of the drill: the gate and the tolerance (±0.01) exist
 precisely because single-number comparisons like "0.84 > 0.79" are misleading
 once you account for seed variance.
+
+## Follow-up: a proper paired test on five seeds
+
+To replace the rough "within 2x the noise" statement with a real test, we reran
+the drill on **five paired seeds** (42, 7, 123, 2024, 99) and ran a paired
+t-test on the per-seed PR-AUC differences, plus a 5,000-sample bootstrap
+confidence interval (`scripts/robustness_and_fairness.py`).
+
+| Quantity | Value |
+| --- | --- |
+| Mean PR-AUC, v1 | 0.814 |
+| Mean PR-AUC, v2 | 0.856 |
+| Mean paired difference (v2 − v1) | +0.0416 |
+| Paired t-test p-value | 0.077 |
+| Bootstrap 95% CI of the difference | [0.015, 0.078] |
+
+The result is genuinely borderline, and we report it as such. The bootstrap
+interval sits just above zero, which hints at a small real gain, but the paired
+t-test **does not clear the 0.05 bar (p = 0.077)**, so with five seeds we cannot
+call the improvement statistically significant. The conclusion is unchanged and
+now rests on a real test rather than a rule of thumb: **accept the v2 model
+because it does not regress, but do not claim a proven improvement.** A firmer
+claim would need more seeds; this is exactly the discipline the quality gate is
+meant to enforce.
