@@ -21,17 +21,12 @@ training:
   cv_folds: 3
   scoring: average_precision
   models:
-    - name: logreg
-      family: logistic_regression
-      params:
-        C: [0.5, 1.0]
-        class_weight: [balanced]
+    # Faster CI: a single small, shallow forest without class weighting.
     - name: rf
       family: random_forest
       params:
-        n_estimators: [150]
-        max_depth: [6, 10]
-        class_weight: [balanced]
+        n_estimators: [40]
+        max_depth: [2]
 
 mlflow:
   tracking_uri: sqlite:///mlflow.db
